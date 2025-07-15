@@ -13,7 +13,7 @@ const defaultColumnWidth = 100;
 const rowHeight = 26;
 
 
-const ReactableTable: React.FC<ReactableTableProps> = ({ data, customStyle, debug }) => {
+const JsGrid: React.FC<ReactableTableProps> = ({ data, customStyle, debug }) => {
     const { header, content } = data;
     const gridRef = useRef<Grid>(null);
     const { columnWidths, handleMouseDown } = useColumnWidths(data.header.length, defaultColumnWidth, gridRef);
@@ -185,4 +185,4 @@ const ReactableTable: React.FC<ReactableTableProps> = ({ data, customStyle, debu
     );
 };
 
-export default ReactableTable;
+export default JsGrid;

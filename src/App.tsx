@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ReactableTable from "./app/ReactableTable";
+import JsGrid from "./app/JsGrid";
 import {ContentData, HeaderData} from "./app/type/types";
 
 
@@ -80,11 +80,10 @@ function App() {
               overflow: "auto",
             }}
         >
-          <ReactableTable
+          <JsGrid
               data={data}
               customStyle={customTableStyle}
           />
-          {/*<ReactableTable />*/}
         </div>
       </div>
   );
