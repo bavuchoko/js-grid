@@ -1,46 +1,107 @@
-# Getting Started with Create React App
+# ReactableTable
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React용으로 커스터마이징 가능하고 크기 조정 및 이동이 가능한 테이블 컴포넌트입니다.
 
-## Available Scripts
+## 📌 Props
 
-In the project directory, you can run:
+### `ReactableTableProps`
 
-### `npm start`
+```typescript
+interface ReactableTableProps {
+    data: {
+        header: HeaderData[];
+        content: ContentData[];
+    };
+    customStyle?: {
+        headerStyle?: React.CSSProperties;
+        contentStyle?: React.CSSProperties;
+    };
+    resizable?: boolean;
+    movable?: boolean;
+}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+| Prop           | Type                                         | Required | Description |
+|---------------|--------------------------------------------|----------|-------------|
+| `data`        | `{ header: HeaderData[]; content: ContentData[]; }` | ✅ | 테이블 데이터 (헤더와 내용 포함). |
+| `customStyle` | `{ headerStyle?: React.CSSProperties; contentStyle?: React.CSSProperties; }` | ❌ | 헤더와 내용에 대한 커스터마이즈 스타일. |
+| `resizable`   | `boolean`                                   | ❌ | 열 크기 조정 가능 여부. 기본값: `false`. |
+| `movable`     | `boolean`                                   | ❌ | 열 이동 및 재정렬 가능 여부. 기본값: `false`. |
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## 🏷️ Data Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `HeaderData`
 
-### `npm run build`
+```typescript
+interface HeaderData {
+    id: string;
+    title: string;
+    renderEditCell?: FC<{
+        value: string;
+        onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    }>;
+}
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Property        | Type    | Required | Description |
+|---------------|--------|----------|-------------|
+| `id`         | `string` | ✅ | 열의 고유 식별자. |
+| `title`      | `string` | ✅ | 테이블 헤더에 표시될 열 제목. |
+| `renderEditCell` | `FC<{ value: string; onChange: (event: ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) => void; rowIndex: number; columnIndex: number; }>` | ❌ | 수정 가능한 셀을 렌더링하는 커스텀 컴포넌트. |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 🔹 `renderEditCell` 사용 예시
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```tsx
+const MyEditCell: FC<{ 
+  value: string; 
+  onChange: (event: ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) => void;
+}> = ({ value, onChange}) => (
+  <input
+    type="text"
+    value={value}
+    onChange={(e) => onChange(e)}
+  />
+);
+```
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `ContentData`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```typescript
+interface ContentData {
+    [key: string]: string;
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+테이블의 각 행은 객체로 표현되며, 객체의 키는 HeaderData.id와 일치합니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### 🔹  예시 콘텐츠 데이터:
 
-## Learn More
+```json
+[
+  { "name": "Alice", "age": "25" },
+  { "name": "Bob", "age": "30" }
+]
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🛠️ 사용예시
+
+```tsx
+const tableData = {
+  header: [
+    { id: "name", title: "Name" },
+    { id: "age", title: "Age" }
+  ],
+  content: [
+    { name: "Alice", age: "25" },
+    { name: "Bob", age: "30" }
+  ]
+};
+
+<ReactableTable data={tableData} resizable={true} movable={true} />;
+```
